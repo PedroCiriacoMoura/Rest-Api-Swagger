@@ -8,3 +8,4 @@ import pedromoura.api.model.UserModel;
 public interface UserRepository extends JpaRepository<UserModel, Long> {
 
 }
+

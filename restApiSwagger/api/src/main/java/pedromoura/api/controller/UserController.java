@@ -1,5 +1,7 @@
 package pedromoura.api.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,25 +11,23 @@ import pedromoura.api.repository.UserRepository;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping
+@RequestMapping(value="/user")
+@Api(value="API REST")
 public class UserController {
 
     @Autowired
     private UserRepository repository;
 
-    @GetMapping(path = "/user/list")
+    @ApiOperation(value="List all users")
+    @GetMapping(path = "/list")
     public List<UserModel> list () {
-    return repository.findAll();
+        return repository.findAll();
     }
 
-    @PostMapping(path = "/user/add")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserModel add (@RequestBody UserModel user) {
-       return repository.save(user);
-    }
-
-    @GetMapping (path = "/user/{id}")
+    @ApiOperation(value="Return user")
+    @GetMapping (path = "/{id}")
     public ResponseEntity consult (@PathVariable ("id") Long id)
     {
         return repository.findById(id)
@@ -35,7 +35,16 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping(path = "/user/delete/{id}")
+    @ApiOperation(value="Add user")
+    @PostMapping(path = "/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserModel add (@RequestBody UserModel user) {
+        return repository.save(user);
+    }
+
+
+    @ApiOperation(value="Delete user")
+    @DeleteMapping(path = "/delete/{id}")
     public void delete (@PathVariable("id") Long id){
         if (repository.existsById(id)){
             repository.deleteById(id);
